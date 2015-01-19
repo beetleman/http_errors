@@ -1,0 +1,4 @@
+http_errors.egg-info/*
+.tox/*
+.eggs/*
+*.pyc
