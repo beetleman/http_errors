@@ -6,6 +6,7 @@ import pytest
 
 from http_errors.image import Image
 
+
 @pytest.fixture
 def image(testfiles_path):
     return Image(os.path.join(testfiles_path, 'img.jpg'))
