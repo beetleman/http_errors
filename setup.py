@@ -4,7 +4,8 @@ from setuptools import setup
 
 
 requires = (
-    'Jinja2'
+    'Jinja2',
+    'python-magic',
 )
 
 

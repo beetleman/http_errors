@@ -1,16 +1,21 @@
 # -*- coding: utf-8 -*-
+from __future__ import unicode_literals
+
 import argparse
 import sys
 
 
-def run(args):
-    pass
+from .app import App
+
+
+def run(argparser):
+    app = App(argparser)
+    app.run()
 
 
 def main():
-    parser = argparse.ArgumentParser(sys.argv[0])
-    args = parser.parse_args()
-    run(args)
+    argparser = argparse.ArgumentParser(sys.argv[0])
+    run(argparser)
 
 
 if __name__ == '__main__':
