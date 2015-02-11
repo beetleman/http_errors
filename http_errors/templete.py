@@ -8,16 +8,21 @@ from http_errors.files import ImageFile, CssFile, JsFile
 
 class ErrorTemplate:
     code = None
-    template_file_name = None
+    _name = None
 
-    def __init__(self, templates_dir):
+    def __init__(self, templates_dir, name):
         self._template_lookup = TemplateLookup(directories=[templates_dir])
+        self._name = name
         self._csss = {}
         self._images = {}
         self._jss = {}
 
+    @property
+    def output_filename(self):
+        return '%s.html' % self.code
+
     def get_template(self):
-        self._template_lookup.get_template(self.template_file_name)
+        self._template_lookup.get_template(self._name)
 
     def render(self):
         context = {}

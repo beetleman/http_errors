@@ -20,24 +20,24 @@ class ConfigPart(object):
         pass
 
 
-class FilePathConfigPart(ConfigPart):
-    file_path = None
+class PathConfigPart(ConfigPart):
+    path = None
 
     def validate(self):
-        super(FilePathConfigPart, self).validate()
-        if self.file_path is None:
+        super(PathConfigPart, self).validate()
+        if self.path is None:
             raise ValidationError()
 
 
-class JsConfigPart(FilePathConfigPart):
+class JsConfigPart(PathConfigPart):
     minimalize = False
 
 
-class CssConfigPart(FilePathConfigPart):
+class CssConfigPart(PathConfigPart):
     minimalize = False
 
 
-class ImagesConfigPart(FilePathConfigPart):
+class ImagesConfigPart(PathConfigPart):
     pass
 
 
@@ -55,13 +55,14 @@ class ErrorConfigPart(ConfigPart):
 
 class GeneralConfigPart(ConfigPart):
     output = None
+    templates_dir = None
 
     def __init__(self):
         self.errors = []
 
     def validation(self):
         super(GeneralConfigPart, self).validation()
-        if len(self.errors) == 0 or self.output is None:
+        if len(self.errors) == 0 or None in (self.output, self.templates_dir):
             raise ValidationError()
         for err in self.errors:
             err.validate()
@@ -84,20 +85,20 @@ class Config:
         self.css.validate()
         self.general.validate()
 
-    def _parse_file_path(self, obj, section, option):
+    def _parse_path(self, obj, section, option):
         try:
-            obj.file_path = self._config.get(section, option)
+            obj.path = self._config.get(section, option)
         except ParserError:
             pass
 
     def parse_images(self):
-        self._parse_file_path(self.images, 'images', 'path')
+        self._parse_path(self.images, 'images', 'path')
 
     def parse_js(self):
-        self._parse_file_path(self.js, 'js', 'path')
+        self._parse_path(self.js, 'js', 'path')
 
     def parse_css(self):
-        self._parse_file_path(self.css, 'css', 'path')
+        self._parse_path(self.css, 'css', 'path')
 
     def _parse_errors(self, section):
         error = ErrorConfigPart()
@@ -112,6 +113,10 @@ class Config:
     def parse_general(self):
         try:
             self.general.output = self._config.get('general', 'output')
+            self.general.templates_dir = self._config.get(
+                'general',
+                'template_dir'
+            )
             map(self._parse_errors,
                 self._config.get('general', 'errors').split())
         except ParserError:
