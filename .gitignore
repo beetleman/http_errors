@@ -1,5 +1,6 @@
 http_errors.egg-info/*
 .tox/*
 .eggs/*
+htmlcov/*
 *.pyc
 .coverage
