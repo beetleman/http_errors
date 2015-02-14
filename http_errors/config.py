@@ -76,7 +76,10 @@ class Config:
 
     def __init__(self, conf_path):
         self._config = ConfigParser()
-        if conf_path not in self._config.read([conf_path]):
+        try:
+            if conf_path not in self._config.read([conf_path]):
+                raise ValidationError()
+        except ParserError:
             raise ValidationError()
 
     def validate(self):

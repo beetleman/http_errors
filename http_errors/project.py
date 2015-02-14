@@ -26,7 +26,7 @@ class Project:
 
     def __init__(self, project_path, force=False):
         self._project_path = project_path
-        if self._is_project(project_path):
+        if self._is_project(project_path) and force is False:
             self.load()
         else:
             self.create(force)

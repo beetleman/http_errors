@@ -4,7 +4,7 @@ from setuptools import setup
 
 
 requires = (
-    'Jinja2',
+    'mako',
     'python-magic',
 )
 
@@ -15,9 +15,9 @@ setup(
     author="Mateusz Probachta",
     author_email="mateusz.probachta@gmail.com",
     description=("Tool for generating static html for defined http erros"),
-    license = "BSD",
-    keywords = "generator http",
-    url = "https://github.com/beetleman/http_codes",
+    license="BSD",
+    keywords="generator http",
+    url="https://github.com/beetleman/http_codes",
     packages=['http_errors'],
     install_requires=requires,
     entry_points={
