@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
-from mako.lookup import TemplateLookup
+from jinja2 import Environment, FileSystemLoader
 
 from http_errors.files import ImageFile, CssFile, JsFile
 
@@ -11,7 +11,9 @@ class ErrorTemplate:
     _name = None
 
     def __init__(self, templates_dir, name):
-        self._template_lookup = TemplateLookup(directories=[templates_dir])
+        self._template_env = Environment(
+            loader=FileSystemLoader(templates_dir)
+        )
         self._name = name
         self._css_list = {}
         self._images_list = {}
@@ -22,7 +24,7 @@ class ErrorTemplate:
         return '%s.html' % self.code
 
     def get_template(self):
-        return self._template_lookup.get_template(self._name)
+        return self._template_env.get_template(self._name)
 
     def render(self):
         context = {}

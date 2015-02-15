@@ -4,7 +4,7 @@ from setuptools import setup
 
 
 requires = (
-    'mako',
+    'Jinja2',
     'python-magic',
 )
 
