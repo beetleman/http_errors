@@ -9,7 +9,7 @@ from .templete import ErrorTemplate
 
 
 PROJECT_TEMPLATE_PATH = os.path.join(
-    os.path.dirname(os.path.dirname(__file__)),
+    os.path.dirname(__file__),
     'project_template'
 )
 
@@ -40,22 +40,26 @@ class Project:
                 shutil.rmtree(self._project_path)
         return shutil.copytree(PROJECT_TEMPLATE_PATH, self._project_path)
 
-    def build(self, force=True):
+    def build(self, force=False):
+        abspath_join = self.abspath_join(self._config.general.output)
+        if not os.path.exists(abspath_join):
+            os.mkdir(abspath_join)
         for template in self.get_templates():
-            file_path = self._path_join(
+            file_path = self.abspath_join(
                 self._config.general.output,
                 template.output_filename
             )
-            if os.path.exists(file_path) and force is False:
-                raise ProjectPathError('%s exist.' % self._project_path)
-            else:
-                os.remove(file_path)
-            with open(file_path) as fp:
+            if os.path.exists(file_path):
+                if force is False:
+                    raise ProjectPathError('%s exist.' % self._project_path)
+                else:
+                    os.remove(file_path)
+            with open(file_path, 'w') as fp:
                 fp.write(template.render())
 
     def get_templates(self):
         templates = []
-        templates_dir = self._config.general.templates_dir
+        templates_dir = self.abspath_join(self._config.general.templates_dir)
         for error in self._config.general.errors:
             for code in error.codes:
                 template = ErrorTemplate(
@@ -70,9 +74,9 @@ class Project:
         return templates
 
     def _add_file(self, template, path, method, **kwargs):
-        for file_name in self._path_join(path):
-            getattr(template, method)(self._path_join(
-                path, file_name, **kwargs))
+        for file_name in os.listdir(self.abspath_join(path)):
+            getattr(template, method)(self.abspath_join(
+                path, file_name), **kwargs)
 
     def _add_images(self, template):
         self._add_file(
@@ -81,7 +85,7 @@ class Project:
             'add_image'
         )
 
-    def _add_css(self, template, path):
+    def _add_css(self, template):
         self._add_file(
             template,
             self._config.css.path,
@@ -89,7 +93,7 @@ class Project:
             minimalize=self._config.css.minimalize
         )
 
-    def _add_js(self, template, path):
+    def _add_js(self, template):
         self._add_file(
             template,
             self._config.js.path,
@@ -98,16 +102,16 @@ class Project:
         )
 
     def load(self):
-        config = Config(self._path_join('project.ini'))
+        config = Config(self.abspath_join('project.ini'))
         config.parse()
         config.validate()
         self._config = config
 
     def _is_project(self, path):
         return os.path.isdir(path) and os.path.isfile(
-            self._path_join('project.ini'))
+            self.abspath_join('project.ini'))
 
-    def _path_join(self, *path):
+    def abspath_join(self, *path):
         return os.path.join(self._project_path, *path)
 
     def validate(self):

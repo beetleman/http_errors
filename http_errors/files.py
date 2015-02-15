@@ -35,9 +35,17 @@ class File(io.FileIO):
 class JsFile(File):
     mime = 'text/javascript'
 
+    def __init__(self, path, minimalize=False):
+        super(JsFile, self).__init__(path)
+        self.minimalize = minimalize
+
 
 class CssFile(File):
     mime = 'text/css'
+
+    def __init__(self, path, minimalize=False):
+        super(CssFile, self).__init__(path)
+        self.minimalize = minimalize
 
 
 class ImageFile(File):
