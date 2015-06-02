@@ -26,15 +26,15 @@ class Project:
 
     def __init__(self, project_path, force=False):
         self._project_path = project_path
-        if self._is_project(project_path) and force is False:
+        if self._is_project(project_path):
             self.load()
-        else:
+        elif force is True:
             self.create(force)
             self.load()
 
     def create(self, force=False):
         if os.path.isdir(self._project_path):
-            if force is not False:
+            if force is not True:
                 raise ProjectPathError('%s exist.' % self._project_path)
             else:
                 shutil.rmtree(self._project_path)

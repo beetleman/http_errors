@@ -9,9 +9,10 @@ from http_errors.config import ValidationError
 
 def test_wrong_path(tmpdir):
     project_path = tmpdir.mkdir('dir')
-    project_path.join('project.ini').write('test')
+    project = Project(str(project_path))
+    project.create(force=True)
     with pytest.raises(ProjectPathError):
-        Project(str(project_path), force=True)
+        project.create(force=False)
 
 
 def test_wrong_config_file(tmpdir):
@@ -24,10 +25,14 @@ def test_wrong_config_file(tmpdir):
 def test_project_load_templates(tmpdir):
     project_path = tmpdir.mkdir('dir')
     project = Project(str(project_path))
+    project.create(force=True)
+    project.load()
     assert len(project.get_templates()) == 2
 
 
-def test_project_nuild(tmpdir):
+def test_project_build(tmpdir):
     project_path = tmpdir.mkdir('dir')
     project = Project(str(project_path))
+    project.create(force=True)
+    project.load()
     assert project.build() is None
