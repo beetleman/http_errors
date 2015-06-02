@@ -6,13 +6,13 @@ from jinja2 import Environment, FileSystemLoader
 from http_errors.files import ImageFile, CssFile, JsFile
 
 
-class DictTagFactory:
+class DictTagFactory(object):
 
     def __init__(self, obj_dict):
         self._obj_dict = obj_dict
 
     def get_content(self, name):
-        return self._obj_dict.get(name)
+        return self._obj_dict[name]
 
     def __call__(self, name):
         return self.get_content(name)
@@ -21,7 +21,7 @@ class DictTagFactory:
 class FileTagFactory(DictTagFactory):
 
     def get_content(self, name):
-        return super(FileTagFactory, self).get_content().to_str()
+        return super(FileTagFactory, self).get_content(name).to_str()
 
 
 class ErrorTemplate:
@@ -37,10 +37,6 @@ class ErrorTemplate:
         self._images_dict = {}
         self._js_dict = {}
 
-        self._template_env.filters['css'] = FileTagFactory(self._css_dict)
-        self._template_env.filters['js'] = FileTagFactory(self._js_dict)
-        self._template_env.filters['image'] = FileTagFactory(self._images_dict)
-
     @property
     def output_filename(self):
         return '%s.html' % self.code
@@ -50,8 +46,12 @@ class ErrorTemplate:
 
     def render(self):
         context = {}
-        template = self.get_template()
         self.update_context(context)
+        self._template_env.filters['css'] = FileTagFactory(self._css_dict)
+        self._template_env.filters['js'] = FileTagFactory(self._js_dict)
+        self._template_env.filters['image'] = FileTagFactory(self._images_dict)
+
+        template = self.get_template()
         return template.render(**context)
 
     def update_context(self, context):

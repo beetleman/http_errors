@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8" />
+        <title>{{code}}</title>
+        <script type="text/javascript">
+         {{'js.js'|js}}
+        </script>
+        <style type="text/css">
+         {{'css.css'|css}}
+        </style>
+        {% block extra_head %}
+        {% endblock %}
+    </head>
+    <body>
+        <div class="content">
+            {% block content %}
+            {% endblock %}
+        </div>
+    </body>
+</html>

@@ -69,7 +69,7 @@ class Project:
                 template.code = code
                 self._add_images(template)
                 self._add_css(template)
-                self._add_css(template)
+                self._add_js(template)
                 templates.append(template)
         return templates
 

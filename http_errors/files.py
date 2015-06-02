@@ -24,7 +24,7 @@ class File(io.FileIO):
 
     @property
     def file_name(self):
-        return os.path.split(self.name)
+        return os.path.split(self.name)[1]
 
     def to_str(self):
         r = self.read()
