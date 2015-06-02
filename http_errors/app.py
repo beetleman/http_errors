@@ -8,7 +8,6 @@ import sys
 from .project import Project
 
 
-
 class App:
 
     def __init__(self, argparser):
@@ -43,7 +42,6 @@ class App:
         for e in errors:
             print('error: %s' % e, file=sys.stderr)
 
-
     def build(self, path, force):
         print('build(self, path, force)', path, force)
 
@@ -57,4 +55,3 @@ class App:
             path=args.path,
             force=args.force
         )
-
