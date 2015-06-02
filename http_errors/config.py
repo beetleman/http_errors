@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
+from http_errors import HttpErrorsException
 
 try:
     from configparser import ConfigParser
@@ -10,7 +11,7 @@ except ImportError:
     from ConfigParser import Error as ParserError
 
 
-class ValidationError(Exception):
+class ValidationError(HttpErrorsException):
     pass
 
 

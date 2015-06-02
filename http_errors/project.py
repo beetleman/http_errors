@@ -7,6 +7,8 @@ import shutil
 from .config import Config
 from .templete import ErrorTemplate
 
+from http_errors import HttpErrorsException
+
 
 PROJECT_TEMPLATE_PATH = os.path.join(
     os.path.dirname(__file__),
@@ -14,7 +16,7 @@ PROJECT_TEMPLATE_PATH = os.path.join(
 )
 
 
-class ProjectError(Exception):
+class ProjectError(HttpErrorsException):
     pass
 
 
@@ -31,6 +33,8 @@ class Project:
         elif force is True:
             self.create(force)
             self.load()
+
+        self.errors = []
 
     def create(self, force=False):
         if os.path.isdir(self._project_path):
@@ -115,5 +119,11 @@ class Project:
         return os.path.join(self._project_path, *path)
 
     def validate(self):
-        # TODO: check all folders and dirs from self._config
-        pass
+        if not hasattr(self, '_config'):
+            try:
+                self.load()
+            except HttpErrorsException as err:
+                self.errors.append(err.message)
+
+        return self.errors
+        # TODO: check all files and dirs from self._config
